@@ -60,7 +60,7 @@ components:
       type: object
       properties:
         input:
-          type: integer
+          type: string
         output:
           type: string
     RangeConversion:

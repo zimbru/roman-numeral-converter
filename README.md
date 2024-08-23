@@ -78,7 +78,7 @@ Expected response:
 
 ```json
 {
-  "input": 42,
+  "input": "42",
   "output": "XLII"
 }
 ```
@@ -97,23 +97,23 @@ Expected response:
 {
   "conversions": [
     {
-      "input": 1,
+      "input": "1",
       "output": "I"
     },
     {
-      "input": 2,
+      "input": "2",
       "output": "II"
     },
     {
-      "input": 3,
+      "input": "3",
       "output": "III"
     },
     {
-      "input": 4,
+      "input": "4",
       "output": "IV"
     },
     {
-      "input": 5,
+      "input": "5",
       "output": "V"
     }
   ]
@@ -203,6 +203,7 @@ src
 │   │               ├── controller
 │   │               ├── service
 │   │               ├── data
+│   │               ├── validator
 │   │               └── exception
 │   └── resources
 │       └── openapi
@@ -213,14 +214,14 @@ src
             └── alex
                 └── aem
                     ├── controller
-                    ├── service
-                    └── integration
+                    └── service
 ```
 
 - `controller`: Contains REST API endpoints.
 - `service`: Houses business logic.
 - `data`: Defines data transfer objects.
 - `exception`: Custom exception classes.
+- `validator`: Validation logic.
 - `test`: Mirrors the main structure for unit and integration tests.
 
 ## Dependencies
