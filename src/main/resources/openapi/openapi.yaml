@@ -1,0 +1,79 @@
+openapi: 3.0.0
+info:
+  title: Roman Numeral Converter API
+  description: API for converting integers to Roman numerals
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: support@example.com
+
+servers:
+  - url: http://localhost:8080
+    description: Local development server
+
+paths:
+  /romannumeral:
+    get:
+      summary: Convert integers to Roman numerals
+      description: Converts a single integer or a range of integers to Roman numerals
+      parameters:
+        - in: query
+          name: query
+          schema:
+            type: integer
+          description: Single integer to convert
+        - in: query
+          name: min
+          schema:
+            type: integer
+          description: Minimum value of the range to convert
+        - in: query
+          name: max
+          schema:
+            type: integer
+          description: Maximum value of the range to convert
+      responses:
+        '200':
+          description: Successful conversion
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/SingleConversion'
+                  - $ref: '#/components/schemas/RangeConversion'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    SingleConversion:
+      type: object
+      properties:
+        input:
+          type: integer
+        output:
+          type: string
+    RangeConversion:
+      type: object
+      properties:
+        conversions:
+          type: array
+          items:
+            $ref: '#/components/schemas/SingleConversion'
+    ErrorResponse:
+      type: object
+      properties:
+        errorCode:
+          type: string
+        message:
+          type: string
