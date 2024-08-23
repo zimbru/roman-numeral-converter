@@ -64,13 +64,40 @@ The Swagger UI provides an interactive interface to explore and test the API end
 
 ## Engineering and Testing Methodology
 
-My development process adheres to industry best practices:
+My development process adheres to industry best practices and leverages modern Java features:
 
 ### Engineering Principles
 
 - Test-Driven Development (TDD): I write tests before implementing features.
 - SOLID Principles: My codebase is designed with a focus on maintainability and scalability.
 - Agile Methodology: I employ iterative development with regular reviews and adaptations.
+
+### Leveraging Java 21 Virtual Threads
+
+This project takes advantage of Java 21's Virtual Threads feature to improve performance and scalability:
+
+1. Implementation:
+    - In `RomanNumeralConverterService`, I use Virtual Threads for parallel processing of number ranges.
+    - Virtual Threads are created using `Executors.newVirtualThreadPerTaskExecutor()`.
+    - Each batch of numbers in the conversion range is processed in its own Virtual Thread.
+
+2. Benefits:
+    - Improved Scalability: Virtual Threads allow for a high number of concurrent operations without the overhead of traditional threads.
+    - Enhanced Performance: For I/O-bound tasks or when dealing with large ranges of numbers, Virtual Threads can significantly improve throughput.
+    - Efficient Resource Utilization: Virtual Threads are managed by the JVM, leading to better resource management compared to platform threads.
+
+3. Code Example:
+   ```java
+   CompletableFuture.supplyAsync(
+       () -> processBatch(min, max, batchIndex, batchSize),
+       Executors.newVirtualThreadPerTaskExecutor()
+   )
+   ```
+
+4. Adaptive Approach:
+    - My implementation dynamically adjusts the batch size based on the input range, ensuring optimal use of Virtual Threads for both small and large conversion requests.
+
+By utilizing Virtual Threads, my application can handle a large number of concurrent conversion requests efficiently, making it well-suited for high-load scenarios and demonstrating the use of modern Java concurrency features.
 
 ### Testing Strategy
 
@@ -127,9 +154,10 @@ Key dependencies include:
 - JUnit 5: Testing framework
 - Mockito: Mocking framework for unit tests
 - SLF4J: Logging facade
+- Springdoc: generating OpenAPI documentation and Swagger interface
 
 For a complete list of dependencies and their versions, please refer to the `pom.xml` file.
 
 ## Additional Information
 
-For further details on the API usage, configuration options, or contribution guidelines, please refer to the project documentation or contact the development team.
+For further details on the API usage, configuration options, or contribution guidelines, please refer to the project documentation or contact me.
