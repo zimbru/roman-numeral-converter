@@ -20,8 +20,6 @@ class RomanNumeralConverterServiceTest {
         RomanValidator validator = new RomanValidator();
         ReflectionTestUtils.setField(service, "configuredBatchSize", 0);
         ReflectionTestUtils.setField(service, "validator", validator);
-
-
     }
 
     @Test

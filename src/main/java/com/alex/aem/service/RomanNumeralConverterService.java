@@ -10,11 +10,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -106,14 +104,25 @@ public class RomanNumeralConverterService implements NumberConverterService {
         final int totalNumbers = max - min + 1;
         final int numBatches = (totalNumbers + batchSize - 1) / batchSize;
 
-        log.info("Using batch size of {} for {} numbers", batchSize, totalNumbers);
+        log.info("Using {} batches, with batch size of {} for {} numbers", numBatches, batchSize, totalNumbers);
 
-        final List<CompletableFuture<List<RomanNumeralData>>> batchFutures = IntStream.range(0, numBatches)
-                .mapToObj(batchIndex -> CompletableFuture.supplyAsync(
-                        () -> processBatch(min, max, batchIndex, batchSize),
-                        Executors.newVirtualThreadPerTaskExecutor()
-                ))
-                .toList();
+        final List<CompletableFuture<List<RomanNumeralData>>> batchFutures = new ArrayList<>();
+
+        // Create an ExecutorService that uses virtual threads
+        try (final ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
+            // Create and submit tasks for each batch
+            for (int batchIndex = 0; batchIndex < numBatches; batchIndex++) {
+                final int currentBatchIndex = batchIndex;
+                final CompletableFuture<List<RomanNumeralData>> future = CompletableFuture.supplyAsync(
+                        () -> processBatch(min, max, currentBatchIndex, batchSize),
+                        executor
+                );
+                batchFutures.add(future);
+            }
+
+            // Wait for all futures to complete and collect results
+            CompletableFuture.allOf(batchFutures.toArray(new CompletableFuture[0])).join();
+        }
 
         final List<RomanNumeralData> allResults = batchFutures.stream()
                 .flatMap(future -> future.join().stream())
