@@ -207,7 +207,7 @@ src
 │   │               └── exception
 │   └── resources
 │       └── openapi
-│           └── api-docs.yaml
+│           └── openapi.yaml
 └── test
     └── java
         └── com
