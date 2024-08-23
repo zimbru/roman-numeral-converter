@@ -5,6 +5,7 @@ import com.alex.aem.data.ErrorResponse;
 import com.alex.aem.data.RomanNumeralConversionsData;
 import com.alex.aem.data.RomanNumeralData;
 import com.alex.aem.exception.RomanNumeralConversionException;
+import com.alex.aem.service.NumberConverterService;
 import com.alex.aem.service.RomanNumeralConverterService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +26,7 @@ public class RomanNumeralController {
 
     private static final Logger log = LoggerFactory.getLogger(RomanNumeralController.class);
 
-    private final RomanNumeralConverterService converterService;
+    private final NumberConverterService converterService;
 
     public RomanNumeralController(final RomanNumeralConverterService romanNumeralConverterService) {
         this.converterService = romanNumeralConverterService;
