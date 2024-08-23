@@ -32,23 +32,23 @@ class RomanNumeralControllerTest {
 
     @Test
     void Single_number_conversion_returns_correct_result() {
-        when(converterService.convertOneNumber(5)).thenReturn(new RomanNumeralData(5, "V"));
+        when(converterService.convertOneNumber(5)).thenReturn(new RomanNumeralData("5", "V"));
 
         final ResponseEntity<?> response = controller.handleConversion(5, null, null);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertInstanceOf(RomanNumeralData.class, response.getBody());
         final RomanNumeralData result = (RomanNumeralData) response.getBody();
-        assertEquals(5, result.input());
+        assertEquals("5", result.input());
         assertEquals("V", result.output());
     }
 
     @Test
     void Range_conversion_returns_correct_result() {
         final List<RomanNumeralData> conversions = List.of(
-                new RomanNumeralData(1, "I"),
-                new RomanNumeralData(2, "II"),
-                new RomanNumeralData(3, "III")
+                new RomanNumeralData("1", "I"),
+                new RomanNumeralData("2", "II"),
+                new RomanNumeralData("3", "III")
         );
         when(converterService.convertMultipleNumbers(1, 3))
                 .thenReturn(new RomanNumeralConversionsData(conversions));
@@ -61,9 +61,9 @@ class RomanNumeralControllerTest {
         assertEquals(3, result.conversions().size());
 
         assertTrue(result.conversions().stream()
-                .anyMatch(data -> data.input() == 1 && "I".equals(data.output())));
+                .anyMatch(data -> data.input().equals("1") && "I".equals(data.output())));
         assertTrue(result.conversions().stream()
-                .anyMatch(data -> data.input() == 3 && "III".equals(data.output())));
+                .anyMatch(data -> data.input().equals("3") && "III".equals(data.output())));
     }
 
     @Test

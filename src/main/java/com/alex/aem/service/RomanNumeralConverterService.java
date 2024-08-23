@@ -84,7 +84,7 @@ public class RomanNumeralConverterService implements NumberConverterService {
         validator.validateInput(number, number);
         final String romanNumber = convert(number);
         log.info("Converted {} to {}", number, romanNumber);
-        return new RomanNumeralData(number, romanNumber);
+        return new RomanNumeralData(Integer.toString(number), romanNumber);
     }
 
     /**
@@ -126,7 +126,7 @@ public class RomanNumeralConverterService implements NumberConverterService {
 
         final List<RomanNumeralData> allResults = batchFutures.stream()
                 .flatMap(future -> future.join().stream())
-                .sorted(Comparator.comparingInt(RomanNumeralData::input))
+                .sorted(Comparator.comparing(data -> Integer.parseInt(data.input())))
                 .collect(Collectors.toList());
 
         return new RomanNumeralConversionsData(allResults);
@@ -145,9 +145,13 @@ public class RomanNumeralConverterService implements NumberConverterService {
         final int start = min + (batchIndex * batchSize);
         final int end = Math.min(start + batchSize - 1, max);
         log.debug("Processing batch {} from {} to {}", batchIndex, start, end);
-        return IntStream.rangeClosed(start, end)
-                .mapToObj(num -> new RomanNumeralData(num, convert(num)))
-                .collect(Collectors.toList());
+
+        final List<RomanNumeralData> results = new ArrayList<>();
+        for (int i = start; i <= end; i++) {
+            results.add(new RomanNumeralData(Integer.toString(i), convert(i)));
+        }
+        return results;
+
     }
 
     /**
@@ -162,9 +166,9 @@ public class RomanNumeralConverterService implements NumberConverterService {
             return configuredBatchSize;
         }
         // Adaptive batching: Adjust batch size based on the range
-        // Minimum batch size: 100, Maximum batch size: 1000
+        // Minimum batch size: 10, Maximum batch size: 1000
         // For ranges larger than 50,000, batch size will be 1000
-        return Math.max(100, Math.min((max - min + 1) / 50, 1000));
+        return Math.max(10, Math.min((max - min + 1) / 50, 1000));
     }
 
     /**
