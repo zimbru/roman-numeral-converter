@@ -46,7 +46,7 @@ class RomanNumeralConverterServiceConcurrentTest {
             assertEquals(numberOfThreads, results.size(), "Expected results from all calls");
 
             results.forEach(allConversions -> {
-                assertEquals(2500, allConversions.conversions().size(), "Each result should have 250 conversions");
+                assertEquals(2500, allConversions.conversions().size(), "Each result should have 2500 conversions");
             });
 
             // Verify multi-threading, in theory this should be > 1, though we never know the actual behavior of the JVM with virtual threads
