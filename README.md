@@ -62,6 +62,83 @@ After starting the application, you can access:
 
 The Swagger UI provides an interactive interface to explore and test the API endpoints.
 
+## API Usage Examples
+
+Here are some examples of how to use the Roman Numeral Converter API using CURL commands:
+
+### Single Number Conversion
+
+To convert a single number to a Roman numeral, use the following CURL command:
+
+```bash
+curl "http://localhost:8080/romannumeral?query=42"
+```
+
+Expected response:
+
+```json
+{
+  "input": 42,
+  "output": "XLII"
+}
+```
+
+### Range Conversion
+
+To convert a range of numbers to Roman numerals, use the following CURL command:
+
+```bash
+curl "http://localhost:8080/romannumeral?min=1&max=5"
+```
+
+Expected response:
+
+```json
+{
+  "conversions": [
+    {
+      "input": 1,
+      "output": "I"
+    },
+    {
+      "input": 2,
+      "output": "II"
+    },
+    {
+      "input": 3,
+      "output": "III"
+    },
+    {
+      "input": 4,
+      "output": "IV"
+    },
+    {
+      "input": 5,
+      "output": "V"
+    }
+  ]
+}
+```
+
+### Error Example
+
+If you provide an invalid input, such as a number out of the supported range (1-3999), you'll receive an error response:
+
+```bash
+curl "http://localhost:8080/romannumeral?query=4000"
+```
+
+Expected response:
+
+```json
+{
+  "errorCode": "OUT_OF_RANGE",
+  "message": "Numbers must be between 1 and 3999"
+}
+```
+
+These examples demonstrate how to interact with the API using CURL commands and what responses to expect for successful conversions and error cases. You can easily test these commands once the application is running on your local machine.
+
 ## Engineering and Testing Methodology
 
 My development process adheres to industry best practices and leverages modern Java features:
