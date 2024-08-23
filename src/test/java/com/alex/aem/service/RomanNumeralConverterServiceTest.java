@@ -3,6 +3,7 @@ package com.alex.aem.service;
 import com.alex.aem.data.RomanNumeralConversionsData;
 import com.alex.aem.data.RomanNumeralData;
 import com.alex.aem.exception.RomanNumeralConversionException;
+import com.alex.aem.validator.RomanValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -16,7 +17,11 @@ class RomanNumeralConverterServiceTest {
     @BeforeEach
     void setUp() {
         service = new RomanNumeralConverterService();
+        RomanValidator validator = new RomanValidator();
         ReflectionTestUtils.setField(service, "configuredBatchSize", 0);
+        ReflectionTestUtils.setField(service, "validator", validator);
+
+
     }
 
     @Test
@@ -47,6 +52,17 @@ class RomanNumeralConverterServiceTest {
                 .anyMatch(data -> data.input() == 1 && "I".equals(data.output())));
         assertTrue(result.conversions().stream()
                 .anyMatch(data -> data.input() == 5 && "V".equals(data.output())));
+    }
+
+    @Test
+    void Range_conversion_max_numbers_returns_correct_results() {
+        final RomanNumeralConversionsData result = service.convertMultipleNumbers(1, 3999);
+        assertEquals(3999, result.conversions().size());
+
+        assertTrue(result.conversions().stream()
+                .anyMatch(data -> data.input() == 1 && "I".equals(data.output())));
+        assertTrue(result.conversions().stream()
+                .anyMatch(data -> data.input() == 3999 && "MMMCMXCIX".equals(data.output())));
     }
 
     @Test
